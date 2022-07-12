@@ -128,50 +128,6 @@ public class DemoWebShopTests extends TestBase {
     }
 
     @Test
-    @DisplayName("")
-    void addProductToCartTest() {
-
-        String body = "product_attribute_72_5_18=53" +
-                "&product_attribute_72_6_19=54" +
-                "&product_attribute_72_3_20=57" +
-                "&addtocart_72.EnteredQuantity=1";
-        String authCookieValue = "AF92D1DFD49E790EE4CC2D0E85753DE050CB2344B20B0F115A15AE" +
-                "A618D6A1E25656143E241BEFA5E2618A0347D5B0D42D4669E9D47859A189847CF3921FDDF61D69B52512514D185B" +
-                "7DA5680BB4414B84E6007877C6ED9BC4ADCE09D9D8F2E034E8ED0D422AC960B15260B74C73DCDE10480D96CBC743" +
-                "22D18641CBABB3EAFA23E166B9A46E8B33AF57476AC31791CF";
-
-        String cartSize = given()
-                .filter(withCustomTemplates())
-                .contentType("application/x-www-form-urlencoded")
-                .body(body)
-                .cookie(authCookieName, authCookieValue)
-                .log().all()
-                .when()
-                .post("/addproducttocart/details/72/1")
-                .then()
-                .log().all()
-                .statusCode(200)
-                .body("success", is(true))
-                .body("message", is("The product has been added to your <a href=\"/cart\">shopping cart</a>"))
-                .body("updateflyoutcartsectionhtml", notNullValue())
-                .body("updatetopcartsectionhtml", notNullValue())
-                .extract()
-                .path("updatetopcartsectionhtml");
-
-        step("Open minimal content, because cookie can be set when site is opened", () ->
-                open("/Themes/DefaultClean/Content/images/logo.png"));
-        step("Set cookie to to browser", () -> {
-            Cookie authCookie = new Cookie(authCookieName, authCookieValue);
-            WebDriverRunner.getWebDriver().manage().addCookie(authCookie);
-        });
-
-        step("Open main page", () ->
-                open(""));
-        step("Verify cart size", () ->
-                $("#topcartlink .cart-qty").shouldHave(text(cartSize)));
-    }
-
-    @Test
     @Tag("demowebshop")
     @DisplayName("")
     void addProductToCartWithDynamicCookieTest() {
@@ -223,4 +179,5 @@ public class DemoWebShopTests extends TestBase {
         step("Verify cart size", () ->
                 $("#topcartlink .cart-qty").shouldHave(text(cartSize)));
     }
+
 }
